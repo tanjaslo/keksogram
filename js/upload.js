@@ -21,6 +21,8 @@ const onpictureUploaderClick = () => {
   const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
 
   pictureUploader.value = '';
+  scaleControlValue.value = `${DEFAULT_SCALE}%`;
+  uploadPreviewElement.style.transform = `scale(${DEFAULT_SCALE/100})`;
 
   if (matches) {
     const reader = new FileReader();
@@ -66,8 +68,6 @@ const onFormEscKeydown = (evt) => {
 
 const onCloseFormButtonClick = () => {
   closeModal(pictureEditForm);
-  uploadPreviewElement.style.transform = `scale(${DEFAULT_SCALE/100})`;
-  scaleControlValue.value = `${DEFAULT_SCALE}%`;
   removeFormListeners();
 };
 
