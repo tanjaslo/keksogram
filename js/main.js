@@ -1,7 +1,8 @@
 import { getData } from './api.js';
-import './big-picture.js';
 import { renderThumbnails } from './thumbnail.js';
 import { showAlert } from './util.js';
+import './big-picture.js';
+import './effect.js';
 import './upload.js';
 
 getData((data) => {
