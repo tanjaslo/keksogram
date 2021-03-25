@@ -44,6 +44,28 @@ const effects = {
   },
 };
 
+// имя_функции(проверяемая_строка, максимальная длина);
+// Результат: true, если строка проходит по длине, и false — если не проходит
+// const MAX_LENGTH = 15;
+
+const isCharLimit = (string, length) => {
+  return (string.length > length) ? true : false;
+};
+// console.log(getStringLength('good morning', MAX_LENGTH));
+
+
+// Результат: целое число из диапазона "от...до"
+const getRandomIntegerInclusive = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return (min >= max || min < 0 || max < 0) ? null : Math.floor(Math.random() * (max - min +1) + min)
+};
+
+/* const getRandomArrayElement = (elements) => {
+  const randomArrayIndex = getRandomIntInclusive(0, elements.length - 1);
+  return elements[randomArrayIndex];
+}; */
+
 const showAlert = () => {
   const alertContainer = document.createElement('div');
   alertContainer.classList.add('alert-container');
@@ -58,18 +80,8 @@ const isEscEvent = (evt) => {
   return evt.key === 'Escape' || evt.key === 'Esc';
 };
 
-// так не удаляются слушатели :(
-/* const onEscKeydown = (modal) => {
-  return (evt) => {
-    if (isEscEvent) {
-      evt.preventDefault();
-      closeModal(modal);
-    }
-  }
-}; */
-
 const openModal = (element) => {
-  document.body.classList.add('.modal-open');
+  document.body.classList.add('modal-open');
   element.classList.remove('hidden');
 };
 
@@ -78,4 +90,4 @@ const closeModal = (element) => {
   element.classList.add('hidden');
 };
 
-export {showAlert, isEscEvent, openModal, closeModal, effects}
+export {isEscEvent, isCharLimit, showAlert, openModal, closeModal, effects}

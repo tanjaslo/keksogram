@@ -1,4 +1,5 @@
 import { isEscEvent, openModal, closeModal } from './util.js';
+import {onUploadFormSubmit} from './form.js';
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DEFAULT_SCALE = 100;
@@ -21,8 +22,6 @@ const onPictureUploaderClick = () => {
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((extension) => fileName.endsWith(extension));
 
-  pictureUploader.value = '';
-
   if (matches) {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
@@ -33,6 +32,7 @@ const onPictureUploaderClick = () => {
   }
   openModal(pictureEditForm);
   addFormListeners();
+  onUploadFormSubmit();
 
   uploadPreviewElement.style.filter = 'none';
   effectLevelContainer.style.display = 'none';
@@ -65,16 +65,18 @@ const onScaleBiggerButtonClick = () => {
 };
 
 const onFormEscKeydown = (evt) => {
-  if (isEscEvent) {
+  if (isEscEvent(evt)) {
     evt.preventDefault();
     closeModal(pictureEditForm);
     removeFormListeners();
+    pictureUploader.value = '';
   }
 };
 
 const onCloseFormButtonClick = () => {
   closeModal(pictureEditForm);
   removeFormListeners();
+  pictureUploader.value = '';
 };
 
 const addFormListeners = () => {

@@ -29,4 +29,4 @@ const sendData = (onSuccess, onError, body) => {
     .catch(onError);
 };
 
-export { getData }
+export { getData, sendData }

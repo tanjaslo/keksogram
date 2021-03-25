@@ -25,7 +25,7 @@ const onCloseModalButtonClick = () => {
 };
 
 const onPictureEscKeydown = (evt) => {
-  if (isEscEvent) {
+  if (isEscEvent(evt)) {
     evt.preventDefault();
     closeModal(bigPicture);
     document.removeEventListener('keydown', onPictureEscKeydown);
