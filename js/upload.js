@@ -1,5 +1,5 @@
 import { isEscEvent, openModal, closeModal } from './util.js';
-import {onUploadFormSubmit} from './form.js';
+import { onUploadFormSubmit, userComment, userHashtags } from './form.js';
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DEFAULT_SCALE = 100;
@@ -26,19 +26,10 @@ const onPictureUploaderClick = () => {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       uploadPreviewElement.src = reader.result;
-      uploadPreviewElement.className = '';
     });
     reader.readAsDataURL(file);
   }
-  openModal(pictureEditForm);
-  addFormListeners();
-  onUploadFormSubmit();
-
-  uploadPreviewElement.style.filter = 'none';
-  effectLevelContainer.style.display = 'none';
-  // effectLevelContainer.classList.add('hidden');
-  scaleControlValue.value = `${DEFAULT_SCALE}%`;
-  uploadPreviewElement.style.transform = `scale(${DEFAULT_SCALE/100})`;
+  openUploadForm();
 };
 
 const applyScale = (currentScale) => {
@@ -64,29 +55,50 @@ const onScaleBiggerButtonClick = () => {
   }
 };
 
+const onActiveElementEsc = () => {
+  if (userHashtags === document.activeElement ||
+     userComment === document.activeElement) {
+    return;
+   }
+  closeUploadForm();
+};
+
+const openUploadForm = () => {
+  openModal(pictureEditForm);
+  addUploadFormListeners();
+  onUploadFormSubmit();
+  uploadPreviewElement.style.filter = 'none';
+  effectLevelContainer.style.display = 'none';
+  scaleControlValue.value = `${DEFAULT_SCALE}%`;
+  uploadPreviewElement.style.transform = `scale(${DEFAULT_SCALE/100})`;
+};
+
+const closeUploadForm = () => {
+  closeModal(pictureEditForm);
+  removeUploadFormListeners();
+  pictureUploader.value = '';
+ //uploadPreviewElement.className = '';
+};
+
 const onFormEscKeydown = (evt) => {
   if (isEscEvent(evt)) {
     evt.preventDefault();
-    closeModal(pictureEditForm);
-    removeFormListeners();
-    pictureUploader.value = '';
+    onActiveElementEsc();
   }
 };
 
 const onCloseFormButtonClick = () => {
-  closeModal(pictureEditForm);
-  removeFormListeners();
-  pictureUploader.value = '';
+  closeUploadForm();
 };
 
-const addFormListeners = () => {
+const addUploadFormListeners = () => {
   document.addEventListener('keydown', onFormEscKeydown);
   closeEditFormButton.addEventListener('click', onCloseFormButtonClick);
   scaleSmallerButton.addEventListener('click', onScaleSmallerButtonClick);
   scaleBiggerButton.addEventListener('click', onScaleBiggerButtonClick);
 };
 
-const removeFormListeners = () => {
+const removeUploadFormListeners = () => {
   document.removeEventListener('keydown', onFormEscKeydown);
   closeEditFormButton.removeEventListener('click', onCloseFormButtonClick);
   scaleSmallerButton.removeEventListener('click', onScaleSmallerButtonClick);
@@ -96,3 +108,17 @@ const removeFormListeners = () => {
 pictureUploader.addEventListener('change', onPictureUploaderClick);
 
 export {uploadPreviewElement, pictureEditForm, effectLevelContainer};
+
+
+/* const onFormEsc = () => {
+  const currentActiveElement = document.activeElement;
+
+  if (currentActiveElement.classList.contains('text__description')) {
+    return;
+  }
+  if (currentActiveElement.classList.contains('text__hashtags')) {
+    return;
+  } else {
+  closeUploadForm();
+}
+} */

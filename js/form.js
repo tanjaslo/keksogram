@@ -45,7 +45,7 @@ const setFormValidity = () => {
   });
 };
 
-export {onUploadFormSubmit, setFormValidity};
+export { userComment, userHashtags, onUploadFormSubmit, setFormValidity };
 
 /*
 Хэш-теги:
