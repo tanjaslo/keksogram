@@ -11,7 +11,6 @@ const HASHTAG_UNIQUE_MESSAGE = 'Хэш-теги не должны повторя
 const HASHTAG_START_MESSAGE = 'Хэш-тег должен начинаться с символа # (решётка)';
 const HASHTAG_LENGTH_MESSAGE = `Длина хэш-тега не может быть менее ${MIN_HASHTAG_LENGTH} или превышать ${MAX_HASHTAG_LENGTH} симв.`;
 const HASHTAG_COUNT_MESSAGE = `Количество хэш-тегов не должно превышать ${MAX_HASHTAG_COUNT}`;
-const ERROR_BORDER = '5px red solid';
 
 const pictureUploadForm = document.querySelector('.img-upload__form');
 const uploadSubmitButton = pictureUploadForm.querySelector('#upload-submit');
@@ -33,36 +32,37 @@ const isTagUnique = (tag, index, arr) => {
 };
 
 const isTagMatches = (tag) => {
-  const regexp = /^#[a-zA-Zа-яА-Я\d]{1,19}$/;
+  //const regexp = /^#[a-zA-Zа-яА-Я\d]{1,19}$/;
+  const regexp = /^#\w{1,19}$/;
   return tag.match(regexp);
 };
 
-const reportValidationError = (field, string, borderStyle) => {
-  field.style.border = borderStyle;
-  field.setCustomValidity(string);
-  field.reportValidity();
-}
+const reportValidationError = (field, message) => {
+  field.classList.add('error-input-field');
+  field.setCustomValidity(message);
+};
 
-const reportNoValidationError = (field) => reportValidationError(field, '', null);
+const reportNoValidationError = (field) => {
+  field.setCustomValidity('');
+  field.classList.remove('error-input-field');
+};
 
 const onHashtagsInput = () => {
   const str = hashtagsInput.value;
   const tags = str.toLowerCase().split(' ');
-  hashtagsInput.setCustomValidity('');
+  reportNoValidationError(hashtagsInput);
 
   tags.forEach((tag, index, arr) => {
     if (!checkTagStart(tag)) {
-      hashtagsInput.setCustomValidity(HASHTAG_START_MESSAGE);
-      // reportValidationError(hashtagsInput, HASHTAG_START_MESSAGE, ERROR_BORDER);
+      reportValidationError(hashtagsInput, HASHTAG_START_MESSAGE);
     } else if (!checkTagLength(tag)) {
-      hashtagsInput.setCustomValidity(HASHTAG_LENGTH_MESSAGE);
+      reportValidationError(hashtagsInput, HASHTAG_LENGTH_MESSAGE);
     } else if (!isTagMatches(tag)) {
-      hashtagsInput.setCustomValidity(HASHTAG_ERROR_MESSAGE);
+      reportValidationError(hashtagsInput, HASHTAG_ERROR_MESSAGE);
     } else if (!isTagUnique(tag, index, arr)) {
-      hashtagsInput.setCustomValidity(HASHTAG_UNIQUE_MESSAGE);
+      reportValidationError(hashtagsInput, HASHTAG_UNIQUE_MESSAGE);
     }
   });
-hashtagsInput.reportValidity();
 };
 
 const onCommentInput = () => {
@@ -70,7 +70,7 @@ const onCommentInput = () => {
   charCounter.textContent = comment.length;
 
   if (isCharLimit(comment, MAX_COMMENT_LENGTH)) {
-    reportValidationError(commentInput, LENGTH_ERROR_MESSAGE, ERROR_BORDER);
+    reportValidationError(commentInput, LENGTH_ERROR_MESSAGE);
   } else {
     reportNoValidationError(commentInput);
   }
@@ -112,24 +112,8 @@ arrr.forEach((ar) => {
   }
 })
 
-// хэш-теги разделяются пробелами;
 const checkEndMatch = (tag) => {
   const regexp = /\w\s$/;
   return regexp.test(tag);
 };
-
-hashtagsInput.addEventListener('input', () => {
-const str = hashtagsInput.value;
-const arr = str.toLowerCase().split(' ');
-// console.log(arr);
-
-arr.forEach((ar) => {
-  if (ar.match(/^#\S\w/g) && ar.length > 1 && ar.length <= MAX_HASHTAG_LENGTH) {
-    hashtagsInput.setCustomValidity('Не катит');
-  } else {
-    hashtagsInput.setCustomValidity('');
-  }
-  hashtagsInput.reportValidity();
-});
-})
 */
