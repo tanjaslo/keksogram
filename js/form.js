@@ -6,17 +6,21 @@ const MAX_COMMENT_LENGTH = 140;
 const MIN_HASHTAG_LENGTH = 2;
 const MAX_HASHTAG_LENGTH = 20;
 const LENGTH_ERROR_MESSAGE = `Длина комментария не может превышать ${MAX_COMMENT_LENGTH} симв.`;
-const HASHTAG_ERROR_MESSAGE = 'Некорректное написание хэш-тега. Используйте только буквы и числа';
+const HASHTAG_ERROR_MESSAGE = 'Некорректный хэш-тег. Используйте только буквы и числа';
 const HASHTAG_UNIQUE_MESSAGE = 'Хэш-теги не должны повторяться';
 const HASHTAG_START_MESSAGE = 'Хэш-тег должен начинаться с символа # (решётка)';
 const HASHTAG_LENGTH_MESSAGE = `Длина хэш-тега не может быть менее ${MIN_HASHTAG_LENGTH} или превышать ${MAX_HASHTAG_LENGTH} симв.`;
-const HASHTAG_COUNT_MESSAGE = `Количество хэш-тегов не должно превышать ${MAX_HASHTAG_COUNT}`;
+const HASHTAG_COUNT_MESSAGE = `Количество хэш-тегов не должно превышать ${MAX_HASHTAG_COUNT}.`;
 
 const pictureUploadForm = document.querySelector('.img-upload__form');
 const uploadSubmitButton = pictureUploadForm.querySelector('#upload-submit');
 const hashtagsInput = pictureUploadForm.querySelector('.text__hashtags');
 const commentInput = pictureUploadForm.querySelector('.text__description');
 const charCounter = pictureUploadForm.querySelector('.char-counter');
+
+const checkTagsLength = (tags) => {
+  return tags.length <= MAX_HASHTAG_COUNT;
+};
 
 const checkTagStart = (tag) => {
   // return !/^#/.test(tag);
@@ -61,6 +65,8 @@ const onHashtagsInput = () => {
       reportValidationError(hashtagsInput, HASHTAG_ERROR_MESSAGE);
     } else if (!isTagUnique(tag, index, arr)) {
       reportValidationError(hashtagsInput, HASHTAG_UNIQUE_MESSAGE);
+    } else if (!checkTagsLength(arr)) {
+      reportValidationError(hashtagsInput, HASHTAG_COUNT_MESSAGE);
     }
   });
 };
@@ -101,19 +107,3 @@ pictureUploadForm.addEventListener('focusout', (evt) => {
 }); */
 
 export { commentInput, hashtagsInput, onUploadFormSubmit, setFormValidity };
-
-/*
-const arrr = ["dfd#hdh", "#!", "#", "#friend", "# ove", "#love", "#peace"];
-const MAX_HASHTAG_LENGTH = 5;
-
-arrr.forEach((ar) => {
-  if (ar.match(/^#\S\w/g) && ar.length > 1 && ar.length <= MAX_HASHTAG_LENGTH) {
-    alert(ar); // love
-  }
-})
-
-const checkEndMatch = (tag) => {
-  const regexp = /\w\s$/;
-  return regexp.test(tag);
-};
-*/
