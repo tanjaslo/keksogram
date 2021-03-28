@@ -1,28 +1,40 @@
 import { sendData } from './api.js';
 import { isCharLimit } from './util.js';
-// import {pictureEditForm} from './upload.js';
 
+const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
-// const MAX_HASHTAG_LENGTH = 20;
-const LENGTH_ERROR_MESSAGE = `Длина комментария превышает ${MAX_COMMENT_LENGTH} симв.`;
-const ERROR_BORDER = '3px red solid';
+const MIN_HASHTAG_LENGTH = 2;
+const MAX_HASHTAG_LENGTH = 20;
+const LENGTH_ERROR_MESSAGE = `Длина комментария не может превышать ${MAX_COMMENT_LENGTH} симв.`;
+const HASHTAG_ERROR_MESSAGE = 'Некорректное написание хэш-тега. Используйте только буквы и числа';
+const HASHTAG_UNIQUE_MESSAGE = 'Хэш-теги не должны повторяться';
+const HASHTAG_START_MESSAGE = 'Хэш-тег должен начинаться с символа # (решётка)';
+const HASHTAG_LENGTH_MESSAGE = `Длина хэш-тега не может быть менее ${MIN_HASHTAG_LENGTH} или превышать ${MAX_HASHTAG_LENGTH} симв.`;
+const HASHTAG_COUNT_MESSAGE = `Количество хэш-тегов не должно превышать ${MAX_HASHTAG_COUNT}`;
+const ERROR_BORDER = '5px red solid';
 
 const pictureUploadForm = document.querySelector('.img-upload__form');
 const uploadSubmitButton = pictureUploadForm.querySelector('#upload-submit');
-//const uploadFormText = pictureUploadForm.querySelector('.img-upload__text');
-const userHashtags = pictureUploadForm.querySelector('.text__hashtags');
-const userComment = pictureUploadForm.querySelector('.text__description');
+const hashtagsInput = pictureUploadForm.querySelector('.text__hashtags');
+const commentInput = pictureUploadForm.querySelector('.text__description');
+const charCounter = pictureUploadForm.querySelector('.char-counter');
 
-const onUploadFormSubmit = () => {
-  uploadSubmitButton.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    sendData(
-      () => showSuccess('Изображение успешно загружено'),
-        // resetToDefaultState(adverts);
-      () => showError('Ошибка загрузки файла'),
-      new FormData(evt.target),
-    );
-  });
+const checkTagStart = (tag) => {
+  // return !/^#/.test(tag);
+  return tag.startsWith('#');
+};
+
+const checkTagLength = (tag) => {
+  return tag.length >= MIN_HASHTAG_LENGTH && tag.length <= MAX_HASHTAG_LENGTH;
+};
+
+const isTagUnique = (tag, index, arr) => {
+  return arr.indexOf(tag) === index;
+};
+
+const isTagMatches = (tag) => {
+  const regexp = /^#[a-zA-Zа-яА-Я\d]{1,19}$/;
+  return tag.match(regexp);
 };
 
 const reportValidationError = (field, string, borderStyle) => {
@@ -31,39 +43,99 @@ const reportValidationError = (field, string, borderStyle) => {
   field.reportValidity();
 }
 
+/* const setErrorMessage = function (message) {
+  hashtagsElement.classList.toggle('error-input-field', true);
+  hashtagsElement.setCustomValidity(message);
+  hashtagsElement.reportValidity();
+}; */
+
 const reportNoValidationError = (field) => reportValidationError(field, '', null);
 
-const setFormValidity = () => {
-  userComment.addEventListener('input', () => {
-    const comment = userComment.value;
+const onHashtagsInput = () => {
+  const str = hashtagsInput.value;
+  const tags = str.toLowerCase().split(' ');
+  hashtagsInput.setCustomValidity('');
 
-    if (isCharLimit(comment, MAX_COMMENT_LENGTH)) {
-      reportValidationError(userComment, LENGTH_ERROR_MESSAGE, ERROR_BORDER);
-    } else {
-      reportNoValidationError(userComment);
+  tags.forEach((tag, index, arr) => {
+    if (!checkTagStart(tag)) {
+      hashtagsInput.setCustomValidity(HASHTAG_START_MESSAGE);
+      // reportValidationError(hashtagsInput, HASHTAG_START_MESSAGE, ERROR_BORDER);
+    } else if (!checkTagLength(tag)) {
+      hashtagsInput.setCustomValidity(HASHTAG_LENGTH_MESSAGE);
+    } else if (!isTagMatches(tag)) {
+      hashtagsInput.setCustomValidity(HASHTAG_ERROR_MESSAGE);
+    } else if (!isTagUnique(tag, index, arr)) {
+      hashtagsInput.setCustomValidity(HASHTAG_UNIQUE_MESSAGE);
     }
+  });
+hashtagsInput.reportValidity();
+};
+
+const onCommentInput = () => {
+  const comment = commentInput.value;
+  charCounter.textContent = comment.length;
+
+  if (isCharLimit(comment, MAX_COMMENT_LENGTH)) {
+    reportValidationError(commentInput, LENGTH_ERROR_MESSAGE, ERROR_BORDER);
+  } else {
+    reportNoValidationError(commentInput);
+  }
+};
+
+const setFormValidity = () => {
+  hashtagsInput.addEventListener('input', onHashtagsInput);
+  commentInput.addEventListener('input', onCommentInput);
+};
+
+const onUploadFormSubmit = () => {
+  uploadSubmitButton.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    sendData(
+      () => showSuccess('Изображение успешно загружено'),
+      () => showError('Ошибка загрузки файла'),
+      new FormData(evt.target),
+    );
   });
 };
 
-export { userComment, userHashtags, onUploadFormSubmit, setFormValidity };
+/* pictureUploadForm.addEventListener('focusin', (evt) => {
+  evt.target.style.background = '#ffe753';
+});
+
+pictureUploadForm.addEventListener('focusout', (evt) => {
+  evt.target.style.background = '';
+}); */
+
+export { commentInput, hashtagsInput, onUploadFormSubmit, setFormValidity };
 
 /*
-Хэш-теги:
-хэш-тег начинается с символа # (решётка);
-строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.;
-хеш-тег не может состоять только из одной решётки;
-максимальная длина одного хэш-тега 20 символов, включая решётку;
-хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом;
-хэш-теги разделяются пробелами;
-один и тот же хэш-тег не может быть использован дважды;
-нельзя указать больше пяти хэш-тегов;
-Сообщения о неправильном формате хэштега задаются с помощью метода setCustomValidity у соответствующего поля.
+const arrr = ["dfd#hdh", "#!", "#", "#friend", "# ove", "#love", "#peace"];
+const MAX_HASHTAG_LENGTH = 5;
 
+arrr.forEach((ar) => {
+  if (ar.match(/^#\S\w/g) && ar.length > 1 && ar.length <= MAX_HASHTAG_LENGTH) {
+    alert(ar); // love
+  }
+})
 
-Как отменить обработчик Esc при фокусе?
-Задача не имеет одного верного решения, однако намекнём на самый простой — stopPropagation.
+// хэш-теги разделяются пробелами;
+const checkEndMatch = (tag) => {
+  const regexp = /\w\s$/;
+  return regexp.test(tag);
+};
 
-если фокус находится в поле ввода комментария, хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
+hashtagsInput.addEventListener('input', () => {
+const str = hashtagsInput.value;
+const arr = str.toLowerCase().split(' ');
+// console.log(arr);
 
-Для валидации хэш-тегов вам придётся вспомнить, как работать с массивами. Набор хэш-тегов можно превратить в массив, воспользовавшись методом split. Он разбивает строки на массивы. После этого, вы можете написать цикл, который будет ходить по полученному массиву и проверять каждый из хэш-тегов на предмет соответствия ограничениям. Если хотя бы один из тегов не проходит нужных проверок, можно воспользоваться методом setCustomValidity для того, чтобы задать полю правильное сообщение об ошибке.
- */
+arr.forEach((ar) => {
+  if (ar.match(/^#\S\w/g) && ar.length > 1 && ar.length <= MAX_HASHTAG_LENGTH) {
+    hashtagsInput.setCustomValidity('Не катит');
+  } else {
+    hashtagsInput.setCustomValidity('');
+  }
+  hashtagsInput.reportValidity();
+});
+})
+*/

@@ -1,5 +1,5 @@
 import { isEscEvent, openModal, closeModal } from './util.js';
-import { onUploadFormSubmit, userComment, userHashtags } from './form.js';
+import { onUploadFormSubmit, commentInput, hashtagsInput } from './form.js';
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DEFAULT_SCALE = 100;
@@ -56,8 +56,8 @@ const onScaleBiggerButtonClick = () => {
 };
 
 const onActiveElementEsc = () => {
-  if (userHashtags === document.activeElement ||
-     userComment === document.activeElement) {
+  if (hashtagsInput === document.activeElement ||
+    commentInput === document.activeElement) {
     return;
    }
   closeUploadForm();
