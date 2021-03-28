@@ -43,12 +43,6 @@ const reportValidationError = (field, string, borderStyle) => {
   field.reportValidity();
 }
 
-/* const setErrorMessage = function (message) {
-  hashtagsElement.classList.toggle('error-input-field', true);
-  hashtagsElement.setCustomValidity(message);
-  hashtagsElement.reportValidity();
-}; */
-
 const reportNoValidationError = (field) => reportValidationError(field, '', null);
 
 const onHashtagsInput = () => {
