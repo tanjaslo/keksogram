@@ -1,5 +1,5 @@
 import { isEscEvent, openModal, closeModal } from './util.js';
-import { onUploadFormSubmit, commentInput, hashtagsInput } from './form.js';
+import { commentInput, hashtagsInput } from './validation.js';
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const DEFAULT_SCALE = 100;
@@ -16,6 +16,17 @@ const scaleSmallerButton = scaleControlContainer.querySelector('.scale__control-
 const scaleBiggerButton = scaleControlContainer.querySelector('.scale__control--bigger');
 const scaleControlValue = scaleControlContainer.querySelector('.scale__control--value');
 const effectLevelContainer = pictureEditForm.querySelector('.img-upload__effect-level');
+const pictureLoaderTemplate = document.querySelector('#messages').content.querySelector('.img-upload__message');
+
+const showPictureLoader = () => {
+  const pictureLoader = pictureLoaderTemplate.cloneNode(true);
+  document.body.appendChild(pictureLoader);
+};
+
+const hidePictureLoader = () => {
+  const pictureLoader = document.querySelector('.img-upload__message');
+  pictureLoader.remove();
+};
 
 const onPictureUploaderClick = () => {
   const file = pictureUploader.files[0];
@@ -24,6 +35,9 @@ const onPictureUploaderClick = () => {
 
   if (matches) {
     const reader = new FileReader();
+
+    reader.addEventListener('loadstart', showPictureLoader);
+    reader.addEventListener('loadend', hidePictureLoader);
     reader.addEventListener('load', () => {
       uploadPreviewElement.src = reader.result;
     });
@@ -66,7 +80,6 @@ const onActiveElementEsc = () => {
 const openUploadForm = () => {
   openModal(pictureEditForm);
   addUploadFormListeners();
-  onUploadFormSubmit();
   uploadPreviewElement.style.filter = 'none';
   effectLevelContainer.style.display = 'none';
   scaleControlValue.value = `${DEFAULT_SCALE}%`;
@@ -77,6 +90,8 @@ const closeUploadForm = () => {
   closeModal(pictureEditForm);
   removeUploadFormListeners();
   pictureUploader.value = '';
+  hashtagsInput.value = '';
+  commentInput.value = '';
  //uploadPreviewElement.className = '';
 };
 
@@ -107,7 +122,7 @@ const removeUploadFormListeners = () => {
 
 pictureUploader.addEventListener('change', onPictureUploaderClick);
 
-export {uploadPreviewElement, pictureEditForm, effectLevelContainer};
+export {uploadPreviewElement, pictureEditForm, effectLevelContainer, closeUploadForm};
 
 
 /* const onFormEsc = () => {

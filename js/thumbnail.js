@@ -2,8 +2,9 @@
 import { openBigPicture, openBigPictureModal } from './big-picture.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
+const imageFilter = document.querySelector('.img-filters');
 
-  const renderThumbnails = (pictures) => {
+const renderThumbnails = (pictures) => {
   const thumbnailTemplate = document.querySelector('#picture').content;
   const thumbnailsFragment = document.createDocumentFragment();
 
@@ -25,10 +26,10 @@ const thumbnailsContainer = document.querySelector('.pictures');
       return;
     }
     const pictureElement = evt.target.closest('.picture');
-    const picture = pictures.find((element) => `${element.id}` === pictureElement.id);
-    openBigPictureModal();
+    const picture = pictures.find((element) => `${element.id}` === pictureElement.id);   openBigPictureModal();
     openBigPicture(picture);
   });
+  imageFilter.classList.remove('img-filters--inactive');
 };
 
 // позже для фильтров?

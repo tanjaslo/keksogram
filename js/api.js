@@ -1,7 +1,7 @@
 const SERVER_GET_URL = 'https://22.javascript.pages.academy/kekstagram/data';
 const SERVER_POST_URL = 'https://22.javascript.pages.academy/kekstagram';
 
-const getData = (onSuccess, onFail) => {
+const getData = (onSuccess, onError) => {
   fetch(SERVER_GET_URL)
     .then((response) => {
       if (response.ok) {
@@ -10,23 +10,25 @@ const getData = (onSuccess, onFail) => {
       throw 'Не удалось загрузить данные';
     })
     .then(onSuccess)
-    .catch(onFail);
+    .catch(onError);
 };
 
-const sendData = (onSuccess, onError, body) => {
-  fetch(SERVER_POST_URL,
-    {
+const sendData = (onSuccess, onFail, body) => {
+  fetch(SERVER_POST_URL, {
       method: 'POST',
-      body,
-    },
-  )
+      credentials: 'same-origin',
+      body: body,
+    })
     .then((response) => {
       if (response.ok) {
-        return onSuccess();
+        onSuccess();
+      } else {
+        onFail();
       }
-      throw 'Не удалось загрузить данные :(';
     })
-    .catch(onError);
+    .catch(() => {
+      onFail();
+    });
 };
 
 export { getData, sendData }

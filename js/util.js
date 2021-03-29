@@ -53,7 +53,7 @@ const isCharLimit = (string, length) => {
 };
 // console.log(getStringLength('good morning', MAX_LENGTH));
 
-
+/*
 // Результат: целое число из диапазона "от...до"
 const getRandomIntegerInclusive = (min, max) => {
     min = Math.ceil(min);
@@ -61,7 +61,7 @@ const getRandomIntegerInclusive = (min, max) => {
     return (min >= max || min < 0 || max < 0) ? null : Math.floor(Math.random() * (max - min +1) + min)
 };
 
-/* const getRandomArrayElement = (elements) => {
+const getRandomArrayElement = (elements) => {
   const randomArrayIndex = getRandomIntInclusive(0, elements.length - 1);
   return elements[randomArrayIndex];
 }; */
