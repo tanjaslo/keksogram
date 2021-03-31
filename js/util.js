@@ -1,73 +1,81 @@
+const ALERT_MESSAGE = 'Не удалось загрузить данные';
 const ALERT_SHOW_TIME = 5000;
-const ALERT_MESSAGE = 'Не удалось загрузить данные с сервера :(';
+const RANDOM_THUMBNAILS_COUNT = 10;
 
-const HOUSING = {
-  bungalow: 'Бунгало',
-  flat: 'Квартира',
-  house: 'Дом',
-  palace: 'Дворец',
+const effects = {
+  chrome: {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+  },
+  sepia: {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+  },
+  marvin: {
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 100,
+    step: 1,
+  },
+  phobos: {
+    range: {
+      min: 0,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+  },
+  heat: {
+    range: {
+      min: 1,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+  },
 };
 
-const HOUSING_PRICE = {
-  bungalow: 0,
-  flat: 1000,
-  house: 5000,
-  palace: 10000,
+const isCharLimit = (string, length) => {
+  return (string.length > length) ? true : false;
+};
+// console.log(getStringLength('good morning', MAX_LENGTH));
+
+const getRandomElements = (elements) => {
+  return elements.slice().sort(() => Math.random() > 0.5 ? 1 : -1);
 };
 
-const getHousingType = (type) => {
-  return HOUSING[type];
-};
+const getRandomThumbnails = (thumbnails) => {
+  const randomThumbnails = getRandomElements(thumbnails);
+  return randomThumbnails.slice(0, RANDOM_THUMBNAILS_COUNT);
+}
 
-const getHousingPrice = (type) => {
-  return HOUSING_PRICE[type];
-};
+/* const getRandomElements = (elements) => {
+  const newel = elements.slice();
+  const el = newel.sort(() => Math.random() > 0.5 ? 1 : -1);
+  return el.slice(0, 4);
+}; */
 
-const declOfRoomsNumber = (rooms) => {
-  const val = rooms % 10;
-  const val2 = rooms % 100;
-  if ([11, 12, 13, 14].includes(val2)) {
-    return `${rooms} комнат`;
-  }
-  if (val === 1) {
-    return `${rooms} комната`;
-  }
-  if ([2,3,4].includes(val)) {
-    return `${rooms} комнаты`;
-  }
-  return `${rooms} комнат`;
-};
+/* Поэтому не забывайте про Object.assign() и Array.prototype.slice() и им подобные методы, когда работаете с импортированной структурой.
 
-const declOfGuestsNumber = (guests) => {
-  return guests === 1 || guests > 20 && guests % 10 === 1 && guests % 100 !== 11 ? `${guests} гостя` : `${guests} гостей`;
-};
+// файл items.js
+const items = ['one', 'two', 'three'];
 
-const isEscEvent = (evt) => {
-  return evt.key === 'Escape' || evt.key === 'Esc';
-};
+export {items};
 
-const showAlert = () => {
-  const alertContainer = document.createElement('div');
+// файл filter.js
+import {items} from './items.js';
 
-  alertContainer.style.zIndex = 9999;
-  alertContainer.style.position = 'fixed';
-  alertContainer.style.left = 0;
-  alertContainer.style.top = 0;
-  alertContainer.style.right = 0;
-  alertContainer.style.padding = '10px 3px';
-  alertContainer.style.fontSize = '28px';
-  alertContainer.style.fontStyle = 'Tahoma';
-  alertContainer.style.color = '#ffffff';
-  alertContainer.style.textAlign = 'center';
-  alertContainer.style.backgroundColor = 'red';
-
-  alertContainer.textContent = ALERT_MESSAGE;
-  document.body.append(alertContainer);
-
-  setTimeout(() => {
-    alertContainer.remove();
-  }, ALERT_SHOW_TIME);
-};
+items.slice().sort(); // отсортировали копию, исходный массив в items.js остался цел */
 
 const debounce = (callback, time) => {
   let interval;
@@ -80,12 +88,28 @@ const debounce = (callback, time) => {
   };
 };
 
-export {
-  declOfRoomsNumber,
-  declOfGuestsNumber,
-  getHousingType,
-  getHousingPrice,
-  showAlert,
-  isEscEvent,
-  debounce
+const showAlert = () => {
+  const alertContainer = document.createElement('div');
+  alertContainer.classList.add('alert-container');
+  alertContainer.textContent = ALERT_MESSAGE;
+  document.body.append(alertContainer);
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
 };
+
+const isEscEvent = (evt) => {
+  return evt.key === 'Escape' || evt.key === 'Esc';
+};
+
+const openModal = (element) => {
+  document.body.classList.add('modal-open');
+  element.classList.remove('hidden');
+};
+
+const closeModal = (element) => {
+  document.body.classList.remove('modal-open');
+  element.classList.add('hidden');
+};
+
+export {isEscEvent, isCharLimit, showAlert, openModal, closeModal, effects, getRandomThumbnails, debounce}

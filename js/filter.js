@@ -1,104 +1,43 @@
-import { removeMarkers, setMarkers } from './map.js';
-import { debounce } from './util.js';
+import { getAllThumbnails } from './api.js';
+import { getRandomThumbnails } from './util.js';
+import { removePictures, updatePictures } from './thumbnail.js';
 
-const mapFiltersForm = document.querySelector('.map__filters');
-const mapFilters = mapFiltersForm.querySelectorAll('.map__filter')
-const mapFeatures = document.querySelector('.map__features');
-const housingTypeFilter = mapFiltersForm.querySelector('#housing-type');
-const housingPriceFilter = mapFiltersForm.querySelector('#housing-price');
-const housingRoomsFilter = mapFiltersForm.querySelector('#housing-rooms');
-const housingGuestsFilter = mapFiltersForm.querySelector('#housing-guests');
+const imageFilter = document.querySelector('.img-filters');
+const filterDefault = document.querySelector('#filter-default');
+const filterRandom = document.querySelector('#filter-random');
+const filterDiscussed = document.querySelector('#filter-discussed');
 
-const MAX_FILTERED_COUNT = 10;
-const RERENDER_DELAY = 500;
-const PRICE_LOW = 10000;
-const PRICE_HIGH = 50000;
+/* const getDiscussedPictures = (pictures) => {
+}; */
 
-const deactivateFilterForm = () => {
-  mapFiltersForm.classList.add('map__filters--disabled');
-  mapFilters.forEach((filter) => {
-    filter.setAttribute('disabled', '');
-  });
-  mapFeatures.setAttribute('disabled', 'disabled');
-};
+const onImageFilterClick = (evt) => {
+  const pics = getAllThumbnails();
 
-const activateFilterForm = () => {
-  mapFiltersForm.classList.remove('map__filters--disabled');
-  mapFilters.forEach((filter) => {
-    filter.removeAttribute('disabled');
-  });
-  mapFeatures.removeAttribute('disabled');
-};
-
-const featuresFilter = (advert) => {
-  const checkedFeatures = mapFiltersForm.querySelectorAll('.map__checkbox:checked');
-  let i = 0;
-  checkedFeatures.forEach((feature) => {
-    if (advert.offer.features.includes(feature.value)) {
-      i++;
-    }
-  });
-  return i === checkedFeatures.length;
-};
-
-const typeFilter  = (advert) => {
-  return housingTypeFilter.value === 'any' || advert.offer.type === housingTypeFilter.value;
-};
-
-const roomsFilter = (advert) => {
-  return housingRoomsFilter.value === 'any' || advert.offer.rooms === Number(housingRoomsFilter.value);
-};
-
-const capacityFilter = (advert) => {
-  return housingGuestsFilter.value === 'any' || advert.offer.guests === Number(housingGuestsFilter.value);
-};
-
-const priceFilter = (advert) => {
-  const filterPrice = housingPriceFilter.value;
-  const advertPrice = advert.offer.price;
-
-  switch (filterPrice) {
-    case 'middle': return advertPrice >= PRICE_LOW && advertPrice < PRICE_HIGH;
-    case 'low': return advertPrice < PRICE_LOW;
-    case 'high': return advertPrice >= PRICE_HIGH;
-    default: return true;
+  if (evt.target === filterDefault) {
+    updatePictures(pics);
+  } else if (evt.target === filterRandom) {
+    const randomPics = getRandomThumbnails(pics);
+    updatePictures(randomPics);
+  } else if (evt.target === filterDiscussed) {
+    alert('filterDiscussed');
+    removePictures();
   }
 };
 
-const isAdvertMatched = (advert) => {
-  return featuresFilter(advert) &&
-  roomsFilter(advert) &&
-  capacityFilter(advert) &&
-  priceFilter(advert) &&
-  typeFilter(advert);
+const initFilter = () => {
+  imageFilter.classList.remove('img-filters--inactive');
+  imageFilter.addEventListener('click', onImageFilterClick);
 };
 
-const getFilteredAdverts = (adverts) => {
-  const filteredAdverts = [];
-  for (let i = 0; i < adverts.length; i++) {
-    const advert = adverts[i];
-    if (isAdvertMatched(advert)) {
-      filteredAdverts.push(advert);
-    }
-    if (filteredAdverts.length === MAX_FILTERED_COUNT) {
-      return filteredAdverts;
-    }
-  }
-  return filteredAdverts;
-};
+export { initFilter }
 
-const debouncedOnFilterChange = debounce((adverts) => {
-  onFilterChange(adverts)
-}, RERENDER_DELAY);
+/* Добавьте обработчики изменения фильтров, которые будут управлять порядком отрисовки элементов на странице:
+Обсуждаемые — фотографии, отсортированные в порядке убывания количества комментариев.
 
-const onFilterChange = (adverts) => {
-  const filteredAdverts = getFilteredAdverts(adverts);
-  removeMarkers();
-  setMarkers(filteredAdverts);
-};
+При переключении фильтров, отрисовка изображений, подходящих под новый фильтр, должна производиться не чаще, чем один раз 500 мс (устранение дребезга).
 
-const initFilterChangeListener = (adverts) => {
-  mapFiltersForm.addEventListener('change', () => debouncedOnFilterChange(adverts));
-};
+При переключении фильтра все фотографии, отрисованные ранее, нужно убрать и вместо них показать те, которые подходят под новые условия.
 
-export { mapFiltersForm, deactivateFilterForm, activateFilterForm, initFilterChangeListener }
+Воспользуйтесь приёмом «устранение дребезга», чтобы при переключении фильтра обновление списка элементов, подходящих под фильтры, происходило не чаще, чем один раз в пол секунды.
+*/
+

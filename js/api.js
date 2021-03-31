@@ -1,5 +1,6 @@
 const SERVER_GET_URL = 'https://22.javascript.pages.academy/kekstagram/data';
 const SERVER_POST_URL = 'https://22.javascript.pages.academy/kekstagram';
+let thumbnails = [];
 
 const getData = (onSuccess, onError) => {
   fetch(SERVER_GET_URL)
@@ -9,7 +10,10 @@ const getData = (onSuccess, onError) => {
       }
       throw 'Не удалось загрузить данные';
     })
-    .then(onSuccess)
+    .then((pictures) => {
+      thumbnails = pictures;
+      onSuccess(pictures);
+    })
     .catch(onError);
 };
 
@@ -31,4 +35,8 @@ const sendData = (onSuccess, onFail, body) => {
     });
 };
 
-export { getData, sendData }
+const getAllThumbnails = () => {
+  return thumbnails;
+}
+
+export { getData, sendData, getAllThumbnails }

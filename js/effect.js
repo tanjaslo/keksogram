@@ -34,14 +34,14 @@ sliderElement.noUiSlider.on('update', (values, handle) => {
   const value = values[handle];
   effectLevelValue.value = value;
 
-switch (effect) {
-  case 'chrome': return uploadPreviewElement.style.filter = `grayscale(${value})`;
-  case 'sepia': return uploadPreviewElement.style.filter = `sepia(${value})`;
-  case 'marvin': return uploadPreviewElement.style.filter = `invert(${value}%)`;
-  case 'phobos': return uploadPreviewElement.style.filter = `blur(${value}px)`;
-  case 'heat': return uploadPreviewElement.style.filter = `brightness(${value})`;
-  default: return uploadPreviewElement.style.filter = 'none';
-  }
+  switch (effect) {
+    case 'chrome': return uploadPreviewElement.style.filter = `grayscale(${value})`;
+    case 'sepia': return uploadPreviewElement.style.filter = `sepia(${value})`;
+    case 'marvin': return uploadPreviewElement.style.filter = `invert(${value}%)`;
+    case 'phobos': return uploadPreviewElement.style.filter = `blur(${value}px)`;
+    case 'heat': return uploadPreviewElement.style.filter = `brightness(${value})`;
+    default: return uploadPreviewElement.style.filter = 'none';
+    }
 });
 
 const onEffectsListChange = (effect) => {

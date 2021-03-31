@@ -2,10 +2,10 @@
 import { openBigPicture, openBigPictureModal } from './big-picture.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
+const thumbnailTemplate = document.querySelector('#picture').content;
 const imageFilter = document.querySelector('.img-filters');
 
 const renderThumbnails = (pictures) => {
-  const thumbnailTemplate = document.querySelector('#picture').content;
   const thumbnailsFragment = document.createDocumentFragment();
 
   pictures.forEach((picture) => {
@@ -29,18 +29,22 @@ const renderThumbnails = (pictures) => {
     const picture = pictures.find((element) => `${element.id}` === pictureElement.id);   openBigPictureModal();
     openBigPicture(picture);
   });
-  imageFilter.classList.remove('img-filters--inactive');
+  // imageFilter.classList.remove('img-filters--inactive');
 };
 
-// позже для фильтров?
-/*  const removePictures = () => {
-    const pictures = document.querySelectorAll('.picture');
-    pictures.forEach((picture) => {
+const removePictures = () => {
+  const pictures = document.querySelector('.pictures').querySelectorAll('.picture');
+  pictures.forEach((picture) => {
     picture.remove();
   });
 };
-*/
 
-export { renderThumbnails };
+const updatePictures = (pictures) => {
+  removePictures();
+  renderThumbnails(pictures);
+  //setPicturesListeners(pictures);
+};
+
+export { renderThumbnails, removePictures, updatePictures };
 
 
