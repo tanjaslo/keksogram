@@ -1,5 +1,5 @@
-const SERVER_GET_URL = 'https://22.javascript.pages.academy/kekstagram/data';
-const SERVER_POST_URL = 'https://22.javascript.pages.academy/kekstagram';
+const SERVER_GET_URL = 'https://24.javascript.pages.academy/kekstagram/data';
+const SERVER_POST_URL = 'https://24.javascript.pages.academy/kekstagram';
 let thumbnails = [];
 
 const getData = (onSuccess, onError) => {
@@ -19,10 +19,10 @@ const getData = (onSuccess, onError) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(SERVER_POST_URL, {
-      method: 'POST',
-      credentials: 'same-origin',
-      body: body,
-    })
+    method: 'POST',
+    credentials: 'same-origin',
+    body: body,
+  })
     .then((response) => {
       if (response.ok) {
         onSuccess();
@@ -37,6 +37,6 @@ const sendData = (onSuccess, onFail, body) => {
 
 const getAllThumbnails = () => {
   return thumbnails;
-}
+};
 
-export { getData, sendData, getAllThumbnails }
+export { getData, sendData, getAllThumbnails };
