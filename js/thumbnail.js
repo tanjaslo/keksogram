@@ -1,9 +1,8 @@
-
 import { openBigPicture, openBigPictureModal } from './big-picture.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content;
-const imageFilter = document.querySelector('.img-filters');
+//const imageFilter = document.querySelector('.img-filters');
 
 const renderThumbnails = (pictures) => {
   const thumbnailsFragment = document.createDocumentFragment();
@@ -13,8 +12,10 @@ const renderThumbnails = (pictures) => {
 
     thumbnailElement.querySelector('.picture__img').src = picture.url;
     thumbnailElement.querySelector('a').id = `${picture.id}`;
-    thumbnailElement.querySelector('.picture__likes').textContent = picture.likes;
-    thumbnailElement.querySelector('.picture__comments').textContent = picture.comments.length;
+    thumbnailElement.querySelector('.picture__likes').textContent =
+      picture.likes;
+    thumbnailElement.querySelector('.picture__comments').textContent =
+      picture.comments.length;
 
     thumbnailsFragment.appendChild(thumbnailElement);
   });
@@ -26,14 +27,19 @@ const renderThumbnails = (pictures) => {
       return;
     }
     const pictureElement = evt.target.closest('.picture');
-    const picture = pictures.find((element) => `${element.id}` === pictureElement.id);   openBigPictureModal();
+    const picture = pictures.find(
+      (element) => `${element.id}` === pictureElement.id,
+    );
+    openBigPictureModal();
     openBigPicture(picture);
   });
   // imageFilter.classList.remove('img-filters--inactive');
 };
 
 const removePictures = () => {
-  const pictures = document.querySelector('.pictures').querySelectorAll('.picture');
+  const pictures = document
+    .querySelector('.pictures')
+    .querySelectorAll('.picture');
   pictures.forEach((picture) => {
     picture.remove();
   });
@@ -46,5 +52,3 @@ const updatePictures = (pictures) => {
 };
 
 export { renderThumbnails, removePictures, updatePictures };
-
-

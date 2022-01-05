@@ -57,25 +57,7 @@ const getRandomElements = (elements) => {
 const getRandomThumbnails = (thumbnails) => {
   const randomThumbnails = getRandomElements(thumbnails);
   return randomThumbnails.slice(0, RANDOM_THUMBNAILS_COUNT);
-}
-
-/* const getRandomElements = (elements) => {
-  const newel = elements.slice();
-  const el = newel.sort(() => Math.random() > 0.5 ? 1 : -1);
-  return el.slice(0, 4);
-}; */
-
-/* Поэтому не забывайте про Object.assign() и Array.prototype.slice() и им подобные методы, когда работаете с импортированной структурой.
-
-// файл items.js
-const items = ['one', 'two', 'three'];
-
-export {items};
-
-// файл filter.js
-import {items} from './items.js';
-
-items.slice().sort(); // отсортировали копию, исходный массив в items.js остался цел */
+};
 
 const debounce = (callback, time) => {
   let interval;
@@ -112,4 +94,13 @@ const closeModal = (element) => {
   element.classList.add('hidden');
 };
 
-export {isEscEvent, isCharLimit, showAlert, openModal, closeModal, effects, getRandomThumbnails, debounce}
+export {
+  isEscEvent,
+  isCharLimit,
+  showAlert,
+  openModal,
+  closeModal,
+  effects,
+  getRandomThumbnails,
+  debounce
+}
