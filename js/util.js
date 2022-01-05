@@ -94,6 +94,31 @@ const closeModal = (element) => {
   element.classList.add('hidden');
 };
 
+/*
+При переключении фильтров, отрисовка изображений, подходящих под новый фильтр, должна производиться не чаще, чем один раз 500 мс (устранение дребезга).
+Воспользуйтесь приёмом «устранение дребезга», чтобы при переключении фильтра обновление списка элементов, подходящих под фильтры, происходило не чаще, чем один раз в пол секунды.
+*/
+
+/* const getRandomElements = (elements) => {
+  const newel = elements.slice();
+  const el = newel.sort(() => Math.random() > 0.5 ? 1 : -1);
+  return el.slice(0, 4);
+}; */
+
+/* Поэтому не забывайте про Object.assign() и Array.prototype.slice() и им подобные методы, когда работаете с импортированной структурой.
+
+// файл items.js
+const items = ['one', 'two', 'three'];
+
+export {items};
+
+// файл filter.js
+import {items} from './items.js';
+
+items.slice().sort(); // отсортировали копию, исходный массив в items.js остался цел */
+
+
+
 export {
   isEscEvent,
   isCharLimit,

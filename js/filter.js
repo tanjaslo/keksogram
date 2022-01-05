@@ -12,19 +12,21 @@ const onImageFilterClick = (evt) => {
   const pics = getAllThumbnails();
   const randomPics = getRandomThumbnails(pics);
   const discussedPics = pics.slice().sort((a, b) => b.comments.length - a.comments.length);
-  const filter = evt.target;
+  const currentFilter = evt.target.closest('.img-filters__button');
+
+  if (!currentFilter) return;
 
   allFilters.forEach((item) => {
     item.classList.remove('img-filters__button--active');
   });
 
-  filter.classList.add('img-filters__button--active');
+  currentFilter.classList.add('img-filters__button--active');
 
-  if (filter === filterDefault) {
+  if (currentFilter === filterDefault) {
     updatePictures(pics);
-  } else if (filter === filterRandom) {
+  } else if (currentFilter === filterRandom) {
     updatePictures(randomPics);
-  } else if (filter === filterDiscussed) {
+  } else if (currentFilter === filterDiscussed) {
     updatePictures(discussedPics);
   }
 };
