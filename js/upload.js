@@ -55,8 +55,8 @@ const onScaleSmallerButtonClick = () => {
   const currentImgSize = parseInt(scaleControlValue.value);
 
   if (currentImgSize > MIN_IMG_SIZE) {
-  const newImgSize = (currentImgSize - RESIZE_STEP);
-  applyScale(newImgSize);
+    const newImgSize = (currentImgSize - RESIZE_STEP);
+    applyScale(newImgSize);
   }
 };
 
@@ -64,16 +64,14 @@ const onScaleBiggerButtonClick = () => {
   const currentImgSize = parseInt(scaleControlValue.value);
 
   if (currentImgSize < MAX_IMG_SIZE) {
-  const newImgSize = (currentImgSize + RESIZE_STEP);
-  applyScale(newImgSize);
+    const newImgSize = (currentImgSize + RESIZE_STEP);
+    applyScale(newImgSize);
   }
 };
 
 const onActiveElementEsc = () => {
   if (hashtagsInput === document.activeElement ||
-    commentInput === document.activeElement) {
-    return;
-   }
+    commentInput === document.activeElement) return;
   closeUploadForm();
 };
 
@@ -92,7 +90,6 @@ const closeUploadForm = () => {
   pictureUploader.value = '';
   hashtagsInput.value = '';
   commentInput.value = '';
- //uploadPreviewElement.className = '';
 };
 
 const onFormEscKeydown = (evt) => {
@@ -123,17 +120,3 @@ const removeUploadFormListeners = () => {
 pictureUploader.addEventListener('change', onPictureUploaderClick);
 
 export {uploadPreviewElement, pictureEditForm, effectLevelContainer, closeUploadForm};
-
-
-/* const onFormEsc = () => {
-  const currentActiveElement = document.activeElement;
-
-  if (currentActiveElement.classList.contains('text__description')) {
-    return;
-  }
-  if (currentActiveElement.classList.contains('text__hashtags')) {
-    return;
-  } else {
-  closeUploadForm();
-}
-} */

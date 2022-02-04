@@ -5,8 +5,8 @@ const getRandomIntegerInclusive = (min, max) => {
 };
 
 const getRandomArrayElement = (elements) => {
-const randomArrayIndex = getRandomIntegerInclusive(0, elements.length - 1);
-return elements[randomArrayIndex];
+  const randomArrayIndex = getRandomIntegerInclusive(0, elements.length - 1);
+  return elements[randomArrayIndex];
 };
 
 const DESCRIPTIONS = [
@@ -35,7 +35,7 @@ const SIMILAR_THUMBNAILS_COUNT = 25;
 
 const createThumbnail = () => {
   return {
-    id: getRandomIntegerInclusive(1, 25), // число от 1 до 25. Идентификаторы не должны повторяться.
+    id: getRandomIntegerInclusive(1, 25),
     url: `photos/${getRandomIntegerInclusive(1, 25)}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomIntegerInclusive(15, 200),
@@ -49,31 +49,5 @@ const createThumbnail = () => {
 };
 
 const createThumbnails = () => new Array(SIMILAR_THUMBNAILS_COUNT).fill(null).map(() => createThumbnail());
-
-/* имя_функции(проверяемая_строка, максимальная длина);
-// Результат: true, если строка проходит по длине, и false — если не проходит
-
-const MAX_LENGTH = 15;
-
-const getStringLength = (str, length) => {
-  return (str.length <= length) ? true : false;
-};
-
-console.log(getStringLength('good morning', MAX_LENGTH));
-
-
-const getRandomIntegerInclusive = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return (min >= max || min < 0 || max < 0) ? null : Math.floor(Math.random() * (max - min +1) + min)
-};
-
-const getRandomArrayElement = (elements) => {
-  const randomArrayIndex = getRandomIntInclusive(0, elements.length - 1);
-  return elements[randomArrayIndex];
-};
-
- */
-
 
 export {createThumbnails}
