@@ -2,7 +2,6 @@ import { openBigPicture, openBigPictureModal } from './big-picture.js';
 
 const thumbnailsContainer = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content;
-//const imageFilter = document.querySelector('.img-filters');
 
 const renderThumbnails = (pictures) => {
   const thumbnailsFragment = document.createDocumentFragment();
@@ -12,10 +11,8 @@ const renderThumbnails = (pictures) => {
 
     thumbnailElement.querySelector('.picture__img').src = picture.url;
     thumbnailElement.querySelector('a').id = `${picture.id}`;
-    thumbnailElement.querySelector('.picture__likes').textContent =
-      picture.likes;
-    thumbnailElement.querySelector('.picture__comments').textContent =
-      picture.comments.length;
+    thumbnailElement.querySelector('.picture__likes').textContent = picture.likes;
+    thumbnailElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
     thumbnailsFragment.appendChild(thumbnailElement);
   });
@@ -23,32 +20,30 @@ const renderThumbnails = (pictures) => {
   thumbnailsContainer.appendChild(thumbnailsFragment);
 
   thumbnailsContainer.addEventListener('click', (evt) => {
-    if (!evt.target.classList.contains('picture__img')) {
-      return;
-    }
     const pictureElement = evt.target.closest('.picture');
+
+    if (!pictureElement) return;
+
     const picture = pictures.find(
-      (element) => `${element.id}` === pictureElement.id,
+      (item) => `${item.id}` === pictureElement.id,
     );
     openBigPictureModal();
     openBigPicture(picture);
   });
-  // imageFilter.classList.remove('img-filters--inactive');
 };
 
 const removePictures = () => {
-  const pictures = document
+  const pictureElements = document
     .querySelector('.pictures')
     .querySelectorAll('.picture');
-  pictures.forEach((picture) => {
-    picture.remove();
+  pictureElements.forEach((element) => {
+    element.remove();
   });
 };
 
 const updatePictures = (pictures) => {
   removePictures();
   renderThumbnails(pictures);
-  //setPicturesListeners(pictures);
 };
 
 export { renderThumbnails, removePictures, updatePictures };
